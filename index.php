@@ -24,8 +24,8 @@
   <input type="text" name="data" value="<?php if (isset($_POST['data'])) echo $_POST['data'] ?>">
   <p>
     <select name="choice">
-      <option value="2">Создать запрос без отправки</option>
       <option value="1">Создать запрос с отправкой</option>
+      <option value="2">Создать запрос без отправки</option>
     </select>
   </p>
   <input type="submit" name="formS" value="Выполнить">
