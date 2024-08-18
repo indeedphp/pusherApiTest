@@ -24,21 +24,22 @@
   <input type="text" name="channels" value="<?php if (isset($_POST['channels'])) echo $_POST['channels'] ?>">
   <p> Введите сообщение </p>
   <input type="text" name="data" value="<?php if (isset($_POST['data'])) echo $_POST['data'] ?>">
-  <p> Отправим запрос </p>
-  <input type="submit" name="formS" value="Submit" >
+  <p></p>
+  <input type="submit" name="formS" value="Отправим запрос" >
 </form>
 
 <?php
 
-if(!empty($_POST ["cluster"])) {   $cluster = $_POST ["cluster"];
-if(!empty($_POST ["app_id"])) {    $app_id = $_POST ["app_id"];
-if(!empty($_POST ["key"])) {       $key = $_POST ["key"];
-if(!empty($_POST ["secret"])) {    $secret = $_POST ["secret"];
-if(!empty($_POST ["event"])) {     $event = $_POST ["event"];
-if(!empty($_POST ["channels"])) {  $channels = $_POST ["channels"];
-if(!empty($_POST ["data"])) {      $data = $_POST ["data"];
+if(!empty($_POST ["cluster"])){    $cluster = $_POST ["cluster"];
+if(!empty($_POST ["app_id"])){     $app_id = $_POST ["app_id"];
+if(!empty($_POST ["key"])){        $key = $_POST ["key"];
+if(!empty($_POST ["secret"])){     $secret = $_POST ["secret"];
+if(!empty($_POST ["event"])){      $event = $_POST ["event"];
+if(!empty($_POST ["channels"])){   $channels = $_POST ["channels"];
+if(!empty($_POST ["data"])){       $data = $_POST ["data"];
 
 $body = '{"name":"'.$event.'","channels":["'.$channels.'"],"data":"'.$data.'"}';
+
 
 $auth_timestamp = time();
 
@@ -75,23 +76,32 @@ $url = 'http://api-'.$cluster.
 $result = file_get_contents($url, false, $context);
 
 echo '<br>';
-echo 'url: '.'http://api-'.$cluster.'.pusher.com/apps/'.$app_id.'/events';
+echo '<b>POST</b>';
 echo '<br>';
-echo 'auth_timestamp: '.$auth_timestamp;
+echo 'url '.'http://api-'.$cluster.'.pusher.com/apps/'.$app_id.'/events';
 echo '<br>';
-echo 'auth_version: '.$auth_version;
+echo '<b>Params</b>';
 echo '<br>';
-echo 'body_md5: '.$body_md5;
+echo 'auth_key '.$key;
 echo '<br>';
-echo 'auth_signature: '.$auth_signature;
+echo 'auth_timestamp '.$auth_timestamp;
 echo '<br>';
-echo 'body: '.$body;
+echo 'auth_version '.$auth_version;
+echo '<br>';
+echo 'body_md5 '.$body_md5;
+echo '<br>';
+echo 'auth_signature '.$auth_signature;
+echo '<br>';
+echo '<b>Headers</b>';
+echo '<br>';
+echo 'Content-Type application/json';
+echo '<br>';
+echo '<b>Body</b>';
+echo '<br>';
+echo $body;
 
 }}}}}}}
 
 ?>
-
 </body>
 </html>
-
-
