@@ -5,10 +5,8 @@
   <link rel="shortcut icon"href="favicon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>pusherApiTest</title>
-
 </head>
 <body>
-
  <form action="" method="POST">
   <p> Введите cluster </p>
   <input type="text" name="cluster" value="<?php if (isset($_POST['cluster'])) echo $_POST['cluster'] ?>">
@@ -24,12 +22,16 @@
   <input type="text" name="channels" value="<?php if (isset($_POST['channels'])) echo $_POST['channels'] ?>">
   <p> Введите сообщение </p>
   <input type="text" name="data" value="<?php if (isset($_POST['data'])) echo $_POST['data'] ?>">
-  <p></p>
-  <input type="submit" name="formS" value="Отправим запрос" >
+  <p>
+    <select name="choice">
+      <option value="2">Создать запрос без отправки</option>
+      <option value="1">Создать запрос с отправкой</option>
+    </select>
+  </p>
+  <input type="submit" name="formS" value="Выполнить">
+
 </form>
-
 <?php
-
 if(!empty($_POST ["cluster"])){    $cluster = $_POST ["cluster"];
 if(!empty($_POST ["app_id"])){     $app_id = $_POST ["app_id"];
 if(!empty($_POST ["key"])){        $key = $_POST ["key"];
@@ -37,16 +39,12 @@ if(!empty($_POST ["secret"])){     $secret = $_POST ["secret"];
 if(!empty($_POST ["event"])){      $event = $_POST ["event"];
 if(!empty($_POST ["channels"])){   $channels = $_POST ["channels"];
 if(!empty($_POST ["data"])){       $data = $_POST ["data"];
+if(!empty($_POST ["choice"])){     $choice = $_POST ["choice"];}
 
 $body = '{"name":"'.$event.'","channels":["'.$channels.'"],"data":"'.$data.'"}';
-
-
 $auth_timestamp = time();
-
 $auth_version = '1.0';
-
 $body_md5 = md5($body);
-
 $string_to_sign =
 "POST\n/apps/" . $app_id .
 "/events\nauth_key=" . $key .
@@ -55,25 +53,23 @@ $string_to_sign =
 "&body_md5=" . $body_md5;
 
 $auth_signature = hash_hmac('sha256', $string_to_sign, $secret);
-
-$opts = array('http' =>
-  array(
-    'method'  => 'POST',
-    'header'  => "Content-Type: application/json\r\n",
-    'content' => $body,
-  )
-);
-
-$context  = stream_context_create($opts);
-
-$url = 'http://api-'.$cluster.
-'.pusher.com/apps/'.$app_id.
-'/events?auth_key='.$key.
-'&auth_timestamp='.$auth_timestamp.
-'&auth_version=1.0&body_md5='.$body_md5.
-'&auth_signature='.$auth_signature;
-
-$result = file_get_contents($url, false, $context);
+if($choice == 1){
+  $opts = array('http' =>
+    array(
+      'method'  => 'POST',
+      'header'  => "Content-Type: application/json\r\n",
+      'content' => $body,
+    )
+  );
+  $context  = stream_context_create($opts);
+  $url = 'http://api-'.$cluster.
+  '.pusher.com/apps/'.$app_id.
+  '/events?auth_key='.$key.
+  '&auth_timestamp='.$auth_timestamp.
+  '&auth_version=1.0&body_md5='.$body_md5.
+  '&auth_signature='.$auth_signature;
+  $result = file_get_contents($url, false, $context);
+}
 
 echo '<br>';
 echo '<b>POST</b>';
@@ -99,9 +95,7 @@ echo '<br>';
 echo '<b>Body</b>';
 echo '<br>';
 echo $body;
-
 }}}}}}}
-
 ?>
 </body>
 </html>
